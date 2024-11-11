@@ -1,5 +1,4 @@
-use lozgrep::create_log_file;
-
 fn main() {
-    create_log_file();
+    lozgrep::create_log_file();
+    lozgrep::collect_arguments();
 }
