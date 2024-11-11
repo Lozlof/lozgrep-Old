@@ -13,6 +13,7 @@ pub struct Config { // For full analysis on the ownership of query and file_path
 
 pub struct QueryAndFileContent {
     pub query_item: String,
+    pub file_path: String,
     pub file_content: String,
 }
 
@@ -37,6 +38,7 @@ pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
 
     let query_item_and_file_content: QueryAndFileContent = QueryAndFileContent {
         query_item: configuration.query.clone(),
+        file_path: configuration.file_path.clone(),
         file_content: file_contents.clone(),
     };
 

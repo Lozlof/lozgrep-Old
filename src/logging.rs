@@ -6,6 +6,7 @@ use chrono::{DateTime, Local};
 use std::fs::OpenOptions;
 use std::io::Write;
 use crate::Config;
+use crate::QueryAndFileContent;
 
 pub fn create_log_file() { // Gets called on by main.rs function: main.
     let lozgrep_log_result: std::result::Result<File, Error> = fs::File::create("lozgrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
@@ -103,6 +104,26 @@ pub fn log_have_file_contents (borrow_config: &Config) { // Gets called on by li
         Ok(_) => {},
         Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
     }  
+}
+
+pub fn log_recieved_parameters(param: &QueryAndFileContent) { // Gets called on by main.rs function: main.
+    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
+    .write(true)
+    .append(true)
+    .open ("lozgrep.log");
+
+    let mut lozgrep_log: File = match lozgrep_log_result {
+        Ok(file) => file,
+        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
+    };
+
+    let current_time: String = get_current_time(); // TODO: Maybe make some way so the file content can be shown. Like turn on verbose logging.
+    let log_entry: String = format!("{}: Main function recieved query parameters. Query for: {} in file {}. File content not written to log to reduce clutter.\n", current_time, param.query_item, param.file_path);
+
+    match lozgrep_log.write_all(log_entry.as_bytes()) { 
+        Ok(_) => {},
+        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
+    } 
 }
 
 fn get_current_time() -> String { // TODO: The time is off by 5 hours.

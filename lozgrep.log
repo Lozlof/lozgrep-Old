@@ -1,5 +1,6 @@
-2024-11-11 23:02:18: Created this log file
-2024-11-11 23:02:18: Collected arguments: target/debug/lozgrep, aa, /home/code/testfile.txt
-2024-11-11 23:02:18: Going to search for aa in file /home/code/testfile.txt
-2024-11-11 23:02:18: Verified that: /home/code/testfile.txt is a valid path
-2024-11-11 23:02:18: Was able to retrieve the contents of: /home/code/testfile.txt
+2024-11-11 23:30:07: Created this log file
+2024-11-11 23:30:07: Collected arguments: target/debug/lozgrep, aaa, /home/code/testfile.txt
+2024-11-11 23:30:07: Going to search for aaa in file /home/code/testfile.txt
+2024-11-11 23:30:07: Verified that: /home/code/testfile.txt is a valid path
+2024-11-11 23:30:07: Was able to retrieve the contents of: /home/code/testfile.txt
+2024-11-11 23:30:07: Main function recieved query parameters. Query for: aaa in file /home/code/testfile.txt. File content not written to log to reduce clutter.
