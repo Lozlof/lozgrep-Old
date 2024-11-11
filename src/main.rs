@@ -1,4 +1,4 @@
 fn main() {
     lozgrep::create_log_file();
-    let config: lozgrep::Config = lozgrep::collect_and_build_arguments();
+    let config: lozgrep::Config = lozgrep::build_arguments_and_collect_content();
 }

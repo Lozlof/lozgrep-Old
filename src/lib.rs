@@ -6,7 +6,7 @@ use std::path::Path;
 pub mod logging;
 pub use logging::*;
 
-pub fn collect_and_build_arguments() -> Config {
+pub fn build_arguments_and_collect_content() -> Config {
     let arguments: Vec<String> = env::args().collect(); // We are calling on the args function. And using the collect method. A vector is a growable array type, and this vector will hold strings.
 
     log_collected_arguments(&arguments); // Pass arguments by reference means that this function retains ownership of arguments.
@@ -18,7 +18,12 @@ pub fn collect_and_build_arguments() -> Config {
 
     log_built_config(&configuration);
 
-    get_contents(&configuration);
+    let file_contents: String = get_contents(&configuration).unwrap_or_else(|err: &str| {
+        println!("{err}");
+        process::exit(1);
+    });
+
+    println!("{file_contents}");
 
     return configuration;
 }
@@ -41,23 +46,25 @@ impl Config { // Starts an implementation block for the Config struct, where ass
         let query: String = args[1].clone(); // The clone method on the values. This will make a full copy of the data for the Config instance to own.
         let file_path: String = args[2].clone();
 
-        return Ok(Config { query, file_path })
+        return Ok(Config { query, file_path });
     }
 }
 
-fn get_contents(config: &Config) {
+fn get_contents(config: &Config) -> Result<String, &'static str> {
     let check_path: bool = Path::new(&config.file_path).exists(); // Path::new(&config.file_path).exists() checks if the path is valid and returns a boolean value.
         
-    if check_path == true {
-        println!("Good: {}", &config.file_path)
-
-    } else {
-        println!("Bad: {}", &config.file_path)
+    if check_path == false { // TODO: Check and see what happens when you give a file path that the current user does not have access to.
+        return Err("The path given does not exist");
     }
-    
-   /* let contents: String = fs::read_to_string(&config.file_path)?; // fs::read_to_string takes the file_path, opens that file, and returns a value of type std::io::Result<String> that contains the file’s contents.
 
-    println!("With text:\n{contents}");
+    log_verify_path(&config);
 
-    return Ok(contents) */
+    let contents_result: Result<String, io::Error> = fs::read_to_string(&config.file_path); // fs::read_to_string takes the file_path, opens that file, and returns a value of type std::io::Result<String> that contains the file’s contents.
+
+    let contents:String = match contents_result { // TODO: Learn how to handle errors without panic.
+        Ok(file) => file,
+        Err(error_one) => panic!("Problem reading the file contents of the given path: {}", error_one),
+    };
+
+    return Ok(contents);
 } 

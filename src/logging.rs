@@ -7,7 +7,7 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use crate::Config;
 
-pub fn create_log_file() {
+pub fn create_log_file() { // Gets called on by main.rs function: main.
     let lozgrep_log_result: std::result::Result<File, Error> = fs::File::create("lozgrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
 
     let mut lozgrep_log: File = match lozgrep_log_result { //  Matches on the Result to handle both success and error cases.
@@ -24,7 +24,7 @@ pub fn create_log_file() {
     }
 }
 
-pub fn log_collected_arguments(vec_arguments: &Vec<String>) { // log_collected_arguments &arguments meaning it does not take ownership of arguments. log_collected_arguments places the value of &arguments into the variable vec_arguments. 
+pub fn log_collected_arguments(vec_arguments: &Vec<String>) { // log_collected_arguments &arguments meaning it does not take ownership of arguments. log_collected_arguments places the value of &arguments into the variable vec_arguments. Gets called on by lib.rs function: build_arguments_and_collect_content.
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()// Opens lozgrep.log with write and append options, ensuring the file is not created if it doesn’t exist.
         .write(true)
         .append(true)
@@ -45,7 +45,7 @@ pub fn log_collected_arguments(vec_arguments: &Vec<String>) { // log_collected_a
     }
 }
 
-pub fn log_built_config(struct_configuration: &Config) {
+pub fn log_built_config(struct_configuration: &Config) { // Gets called on by lib.rs function: build_arguments_and_collect_content.
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
         .write(true)
         .append(true)
@@ -58,6 +58,26 @@ pub fn log_built_config(struct_configuration: &Config) {
 
     let current_time: String = get_current_time();
     let log_entry: String = format!("{}: Going to search for {} in file {}\n", current_time, struct_configuration.query, struct_configuration.file_path);
+
+    match lozgrep_log.write_all(log_entry.as_bytes()) { 
+        Ok(_) => {},
+        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
+    }
+}
+
+pub fn log_verify_path (borrow_config: &Config) { // Gets called on by lib.rs function: get_contents.
+    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
+    .write(true)
+    .append(true)
+    .open ("lozgrep.log");
+
+    let mut lozgrep_log: File = match lozgrep_log_result {
+        Ok(file) => file,
+        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
+    };
+
+    let current_time: String = get_current_time();
+    let log_entry: String = format!("{}: Verified that: {} is a valid path\n", current_time, borrow_config.file_path);
 
     match lozgrep_log.write_all(log_entry.as_bytes()) { 
         Ok(_) => {},
