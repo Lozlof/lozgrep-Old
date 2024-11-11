@@ -5,7 +5,7 @@ use std::time::SystemTime;
 use chrono::{DateTime, Local};
 
 pub fn create_log_file() {
-    let minigrep_log_result: std::result::Result<File, Error> = fs::File::create("minigrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
+    let minigrep_log_result: std::result::Result<File, Error> = fs::File::create("lozgrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
 
     let mut minigrep_log: File = match minigrep_log_result { //  Matches on the Result to handle both success and error cases.
         Ok(file) => file, // If the file was created successfully, extract the File object. Assigns the File to minigrep_log. The File is mutable, allowing for read/write operations.
