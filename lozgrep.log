@@ -1,2 +1,3 @@
-2024-11-11 17:32:52: Created this log file
-2024-11-11 17:32:52: Collected arguments: target/debug/lozgrep, aaa, sss, sss
+2024-11-11 20:07:06: Created this log file
+2024-11-11 20:07:06: Collected arguments: target/debug/lozgrep, aaa, aaaaaaaa
+2024-11-11 20:07:06: Going to search for aaa in file aaaaaaaa

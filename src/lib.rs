@@ -13,9 +13,9 @@ pub use logging::*;
             process::exit(1); // If Ok(config), it unwraps and assigns it to config. If Err(err), it executes the closure, which prints the error message and exits the program with process::exit(1).
         }); // The variable config is an instance of the Config struct.
 
-        log_built_config();
+        log_built_config(&configuration);
     }
-    struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
+    pub struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
         query: String,
         file_path: String,
     }   

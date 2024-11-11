@@ -5,6 +5,7 @@ use std::time::SystemTime;
 use chrono::{DateTime, Local};
 use std::fs::OpenOptions;
 use std::io::Write;
+use crate::Config;
 
 pub fn create_log_file() {
     let lozgrep_log_result: std::result::Result<File, Error> = fs::File::create("lozgrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
@@ -44,8 +45,24 @@ pub fn log_collected_arguments(vec_arguments: &Vec<String>) { // log_collected_a
     }
 }
 
-pub fn log_built_config() {
+pub fn log_built_config(struct_configuration: &Config) {
+    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open ("lozgrep.log");
 
+    let mut lozgrep_log: File = match lozgrep_log_result {
+        Ok(file) => file,
+        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
+    };
+
+    let current_time: String = get_current_time();
+    let log_entry: String = format!("{}: Going to search for {} in file {}\n", current_time, struct_configuration.query, struct_configuration.file_path);
+
+    match lozgrep_log.write_all(log_entry.as_bytes()) { 
+        Ok(_) => {},
+        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
+    }
 }
 
 fn get_current_time() -> String { // TODO: The time is off by 5 hours.
