@@ -4,17 +4,6 @@ use std::io::*;
 use std::time::SystemTime;
 use chrono::{DateTime, Local};
 
-// Creates or overwrites the log file minigrep.log and writes the first entry to it.
-/* pub fn create_log_file() -> Result<()> {
-    get_current_time();
-
-    let mut minigrep_log: File = fs::File::create("minigrep.log")?;
-    
-    minigrep_log.write_all(b"Create a new log file\n")?;
-    
-    Ok(())
-}*/
-
 pub fn create_log_file() {
     let minigrep_log_result: std::result::Result<File, Error> = fs::File::create("minigrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
 
