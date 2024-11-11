@@ -6,31 +6,42 @@ use std::path::Path;
 pub mod logging;
 pub use logging::*;
 
-pub fn build_arguments_and_collect_content() -> Config {
+pub struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
+    query: String,
+    file_path: String,
+}
+
+pub struct QueryAndFileContent {
+    pub query_item: String,
+    pub file_content: String,
+}
+
+pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
     let arguments: Vec<String> = env::args().collect(); // We are calling on the args function. And using the collect method. A vector is a growable array type, and this vector will hold strings.
 
-    log_collected_arguments(&arguments); // Pass arguments by reference means that this function retains ownership of arguments.
+    log_collected_arguments(&arguments); // Pass arguments by reference means that this function retains ownership of arguments. Logs the arguments that were passed.
 
     let configuration: Config = Config::build_arguments(&arguments).unwrap_or_else(|err: &str| { // Attempts to create a Config object by calling the associated function Config::build_arguments(&arguments).
         println!("{err}"); // Config::build_arguments(&arguments) returns a Result<Config, &'static str>, which is either Ok(config) if successful or Err(err) if an error occurs. .unwrap_or_else(|err| { ... }) is called on the Result to handle the two cases.
         process::exit(1); // If Ok(config), it unwraps and assigns it to config. If Err(err), it executes the closure, which prints the error message and exits the program with process::exit(1).
     }); // The variable config is an instance of the Config struct.
 
-    log_built_config(&configuration);
+    log_built_config(&configuration); // Logs the validated arguments.
 
     let file_contents: String = get_contents(&configuration).unwrap_or_else(|err: &str| {
         println!("{err}");
         process::exit(1);
     });
 
-    println!("{file_contents}");
+    log_have_file_contents(&configuration); // Logs that the file contents were put into a string.
 
-    return configuration;
+    let query_item_and_file_content: QueryAndFileContent = QueryAndFileContent {
+        query_item: configuration.query.clone(),
+        file_content: file_contents.clone(),
+    };
+
+    return query_item_and_file_content;
 }
-pub struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
-    query: String,
-    file_path: String,
-}   
 
 impl Config { // Starts an implementation block for the Config struct, where associated functions (methods) are defined.
     fn build_arguments(args: &[String]) -> Result<Config, &'static str> { // args: &[String] means it takes a reference to a slice of Strings (an array-like view into the vector). Returns a Result that is either Ok(Config) on success or Err(&'static str) on failure.
@@ -57,7 +68,7 @@ fn get_contents(config: &Config) -> Result<String, &'static str> {
         return Err("The path given does not exist");
     }
 
-    log_verify_path(&config);
+    log_verify_path(&config); // Logs that the path was validated.
 
     let contents_result: Result<String, io::Error> = fs::read_to_string(&config.file_path); // fs::read_to_string takes the file_path, opens that file, and returns a value of type std::io::Result<String> that contains the file’s contents.
 
@@ -67,4 +78,4 @@ fn get_contents(config: &Config) -> Result<String, &'static str> {
     };
 
     return Ok(contents);
-} 
+}

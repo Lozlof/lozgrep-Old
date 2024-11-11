@@ -85,6 +85,26 @@ pub fn log_verify_path (borrow_config: &Config) { // Gets called on by lib.rs fu
     }
 }
 
+pub fn log_have_file_contents (borrow_config: &Config) { // Gets called on by lib.rs function: build_arguments_and_collect_content.
+    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
+    .write(true)
+    .append(true)
+    .open ("lozgrep.log");
+
+    let mut lozgrep_log: File = match lozgrep_log_result {
+        Ok(file) => file,
+        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
+    };
+
+    let current_time: String = get_current_time();
+    let log_entry: String = format!("{}: Was able to retrieve the contents of: {}\n", current_time, borrow_config.file_path);
+
+    match lozgrep_log.write_all(log_entry.as_bytes()) { 
+        Ok(_) => {},
+        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
+    }  
+}
+
 fn get_current_time() -> String { // TODO: The time is off by 5 hours.
     let current_time: SystemTime = SystemTime::now(); // Retrieves the current system time (SystemTime) from the operating system.
     let date_time: DateTime<Local> = current_time.into(); // The SystemTime is converted into a DateTime<Local>, which is a more convenient type from the chrono crate for working with dates and times in the local time zone.
