@@ -44,6 +44,10 @@ pub fn log_collected_arguments(vec_arguments: &Vec<String>) { // log_collected_a
     }
 }
 
+pub fn log_built_config() {
+
+}
+
 fn get_current_time() -> String { // TODO: The time is off by 5 hours.
     let current_time: SystemTime = SystemTime::now(); // Retrieves the current system time (SystemTime) from the operating system.
     let date_time: DateTime<Local> = current_time.into(); // The SystemTime is converted into a DateTime<Local>, which is a more convenient type from the chrono crate for working with dates and times in the local time zone.
