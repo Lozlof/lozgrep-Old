@@ -25,20 +25,27 @@ pub fn create_log_file() { // Gets called on by main.rs function: main.
     }
 }
 
-pub fn log_collected_arguments(vec_arguments: &Vec<String>) { // log_collected_arguments &arguments meaning it does not take ownership of arguments. log_collected_arguments places the value of &arguments into the variable vec_arguments. Gets called on by lib.rs function: build_arguments_and_collect_content.
+pub fn write_to_log_file(choice: u64, passed_entry: &String) {
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()// Opens lozgrep.log with write and append options, ensuring the file is not created if it doesn’t exist.
         .write(true)
         .append(true)
-        .open ("lozgrep.log");
-    
+        .open ("lozgrep.log");   
+
     let mut lozgrep_log: File = match lozgrep_log_result {
         Ok(file) => file,
         Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
     };
 
     let current_time: String = get_current_time();
-    let concatenated_args: String = vec_arguments.join(", ");
-    let log_entry: String = format!("{}: Collected arguments: {}\n", current_time, concatenated_args);
+
+    let log_entry: String = if choice == 1 { // Gets called on by lib.rs function: build_arguments_and_collect_content.
+        format!("{}: Collected arguments: {}\n", current_time, passed_entry)
+
+    } else if choice == 2 {
+        format!("{}: Test One: {}\n", current_time, passed_entry)
+    } else {
+        format!("{}: Test Two: {}\n", current_time, passed_entry)
+    };
 
     match lozgrep_log.write_all(log_entry.as_bytes()) { 
         Ok(_) => {},

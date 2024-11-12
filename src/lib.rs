@@ -20,7 +20,11 @@ pub struct QueryAndFileContent {
 pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
     let arguments: Vec<String> = env::args().collect(); // We are calling on the args function. And using the collect method. A vector is a growable array type, and this vector will hold strings.
 
-    log_collected_arguments(&arguments); // Pass arguments by reference means that this function retains ownership of arguments. Logs the arguments that were passed.
+    {
+        let concatenated_args: &String = &arguments.join(", "); // Format the string before it gets passed to write_to_log_file.
+
+        write_to_log_file(1,&concatenated_args); // Pass the collected arguments to the logging function.
+    }
 
     let configuration: Config = Config::build_arguments(&arguments).unwrap_or_else(|err: &str| { // Attempts to create a Config object by calling the associated function Config::build_arguments(&arguments).
         println!("{err}"); // Config::build_arguments(&arguments) returns a Result<Config, &'static str>, which is either Ok(config) if successful or Err(err) if an error occurs. .unwrap_or_else(|err| { ... }) is called on the Result to handle the two cases.
