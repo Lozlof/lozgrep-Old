@@ -5,12 +5,10 @@ use std::io; // Need for get_contents error handling.
 use std::path::Path;
 pub mod logging;
 pub use logging::*;
-
-pub struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
+struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
     query: String,
     file_path: String,
 }
-
 pub struct QueryAndFileContent {
     pub query_item: String,
     pub file_path: String,
@@ -22,7 +20,8 @@ pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
 
     {
         let concatenated_args: &String = &arguments.join(", "); // Format the string before it gets passed to write_to_log_file.
-        write_to_log_file(1,&concatenated_args); // Pass the collected arguments to the logging function. 
+        let collected_args: String = format!("Collected arguments: {}", concatenated_args);
+        write_to_log_file(&collected_args); // Pass the collected arguments to the logging function. Logs the collected arguments. 
     }
 
     let configuration: Config = Config::build_arguments(&arguments).unwrap_or_else(|err: &str| { // Attempts to create a Config object by calling the associated function Config::build_arguments(&arguments).
@@ -32,17 +31,18 @@ pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
 
     {
         let fmt_config_and_path: String = format!("Going to search for {} in file {}", &configuration.query, &configuration.file_path); // format! returns a String not a $String. Will fall out of scope once operation is complete.
-        write_to_log_file(2,&fmt_config_and_path);
+        write_to_log_file(&fmt_config_and_path); // Logs the parsed and build arguments.
     }
-
-    // log_built_config(&configuration); // Logs the validated arguments.
 
     let file_contents: String = get_contents(&configuration).unwrap_or_else(|err: &str| {
         println!("{err}");
         process::exit(1);
     });
 
-    log_have_file_contents(&configuration); // Logs that the file contents were put into a string.
+    {
+        let file_contents: String = format!("Was able to retrieve the contents of: {}", &configuration.file_path);
+        write_to_log_file(&file_contents); // Logs that the file contents were put into a string.
+    }
 
     let query_item_and_file_content: QueryAndFileContent = QueryAndFileContent {
         query_item: configuration.query.clone(),
@@ -78,7 +78,10 @@ fn get_contents(config: &Config) -> Result<String, &'static str> {
         return Err("The path given does not exist");
     }
 
-    log_verify_path(&config); // Logs that the path was validated.
+    {
+        let validated_path: String = format!("Verified that: {} is a valid path", &config.file_path);
+        write_to_log_file(&validated_path); // Logs that the path was validated.
+    }
 
     let contents_result: Result<String, io::Error> = fs::read_to_string(&config.file_path); // fs::read_to_string takes the file_path, opens that file, and returns a value of type std::io::Result<String> that contains the file’s contents.
 

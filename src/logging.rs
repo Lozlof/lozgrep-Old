@@ -5,8 +5,6 @@ use std::time::SystemTime;
 use chrono::{DateTime, Local};
 use std::fs::OpenOptions;
 use std::io::Write;
-use crate::Config;
-use crate::QueryAndFileContent;
 
 pub fn create_log_file() { // Gets called on by main.rs function: main.
     let lozgrep_log_result: std::result::Result<File, Error> = fs::File::create("lozgrep.log"); // Attempts to create a new file named "minigrep.log". If the file already exists, it truncates it (clears its contents). Returns a Result<File, Error> indicating success (Ok) or failure (Err).
@@ -25,7 +23,7 @@ pub fn create_log_file() { // Gets called on by main.rs function: main.
     }
 }
 
-pub fn write_to_log_file(choice: u64, passed_entry: &String) {
+pub fn write_to_log_file(passed_entry: &String) {
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()// Opens lozgrep.log with write and append options, ensuring the file is not created if it doesn’t exist.
         .write(true)
         .append(true)
@@ -37,101 +35,12 @@ pub fn write_to_log_file(choice: u64, passed_entry: &String) {
     };
 
     let current_time: String = get_current_time();
-
-    let log_entry: String = if choice == 1 { // Gets called on by lib.rs function: build_arguments_and_collect_content.
-        format!("{}: Collected arguments: {}\n", current_time, passed_entry)
-
-    } else if choice == 2 {
-        format!("{}: {}\n", current_time, passed_entry)
-
-    } else {
-        format!("{}: Test Two: {}\n", current_time, passed_entry)
-    };
+    let log_entry: String = format!("{}: {}\n", current_time, passed_entry);
 
     match lozgrep_log.write_all(log_entry.as_bytes()) { 
         Ok(_) => {},
         Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
     }
-}
-
-/*pub fn log_built_config(struct_configuration: &Config) { // Gets called on by lib.rs function: build_arguments_and_collect_content.
-    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
-        .write(true)
-        .append(true)
-        .open ("lozgrep.log");
-
-    let mut lozgrep_log: File = match lozgrep_log_result {
-        Ok(file) => file,
-        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
-    };
-
-    let current_time: String = get_current_time();
-    let log_entry: String = format!("{}: Going to search for {} in file {}\n", current_time, struct_configuration.query, struct_configuration.file_path);
-
-    match lozgrep_log.write_all(log_entry.as_bytes()) { 
-        Ok(_) => {},
-        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
-    }
-} */
-
-pub fn log_verify_path (borrow_config: &Config) { // Gets called on by lib.rs function: get_contents.
-    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
-    .write(true)
-    .append(true)
-    .open ("lozgrep.log");
-
-    let mut lozgrep_log: File = match lozgrep_log_result {
-        Ok(file) => file,
-        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
-    };
-
-    let current_time: String = get_current_time();
-    let log_entry: String = format!("{}: Verified that: {} is a valid path\n", current_time, borrow_config.file_path);
-
-    match lozgrep_log.write_all(log_entry.as_bytes()) { 
-        Ok(_) => {},
-        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
-    }
-}
-
-pub fn log_have_file_contents (borrow_config: &Config) { // Gets called on by lib.rs function: build_arguments_and_collect_content.
-    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
-    .write(true)
-    .append(true)
-    .open ("lozgrep.log");
-
-    let mut lozgrep_log: File = match lozgrep_log_result {
-        Ok(file) => file,
-        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
-    };
-
-    let current_time: String = get_current_time();
-    let log_entry: String = format!("{}: Was able to retrieve the contents of: {}\n", current_time, borrow_config.file_path);
-
-    match lozgrep_log.write_all(log_entry.as_bytes()) { 
-        Ok(_) => {},
-        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
-    }  
-}
-
-pub fn log_recieved_parameters(param: &QueryAndFileContent) { // Gets called on by main.rs function: main.
-    let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
-    .write(true)
-    .append(true)
-    .open ("lozgrep.log");
-
-    let mut lozgrep_log: File = match lozgrep_log_result {
-        Ok(file) => file,
-        Err(error_one) => panic!("Problem opening the lozgrep.log file: {}", error_one),
-    };
-
-    let current_time: String = get_current_time(); // TODO: Maybe make some way so the file content can be shown. Like turn on verbose logging.
-    let log_entry: String = format!("{}: Main function recieved query parameters. Query for: {} in file {}. File content not written to log to reduce clutter.\n", current_time, param.query_item, param.file_path);
-
-    match lozgrep_log.write_all(log_entry.as_bytes()) { 
-        Ok(_) => {},
-        Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
-    } 
 }
 
 fn get_current_time() -> String { // TODO: The time is off by 5 hours.
