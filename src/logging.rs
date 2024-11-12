@@ -23,7 +23,7 @@ pub fn create_log_file() { // Gets called on by main.rs function: main.
     }
 }
 
-pub fn write_to_log_file(passed_entry: &String) {
+pub fn write_to_log_file(passed_entry: &String) { // Gets called on by main.rs function: main. Gets called on by lib.rs functions: build_arguments_and_collect_content, get_contents.
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()// Opens lozgrep.log with write and append options, ensuring the file is not created if it doesn’t exist.
         .write(true)
         .append(true)
