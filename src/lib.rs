@@ -5,6 +5,7 @@ use std::io; // Need for get_contents error handling.
 use std::path::Path;
 pub mod logging;
 pub use logging::*;
+pub mod test;
 struct Config { // For full analysis on the ownership of query and file_path, see Rust-Loz/notes/minigrepnotes.md/Ownership analysis - struct Config.
     query: String,
     file_path: String,
