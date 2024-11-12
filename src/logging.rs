@@ -42,7 +42,8 @@ pub fn write_to_log_file(choice: u64, passed_entry: &String) {
         format!("{}: Collected arguments: {}\n", current_time, passed_entry)
 
     } else if choice == 2 {
-        format!("{}: Test One: {}\n", current_time, passed_entry)
+        format!("{}: {}\n", current_time, passed_entry)
+
     } else {
         format!("{}: Test Two: {}\n", current_time, passed_entry)
     };
@@ -53,7 +54,7 @@ pub fn write_to_log_file(choice: u64, passed_entry: &String) {
     }
 }
 
-pub fn log_built_config(struct_configuration: &Config) { // Gets called on by lib.rs function: build_arguments_and_collect_content.
+/*pub fn log_built_config(struct_configuration: &Config) { // Gets called on by lib.rs function: build_arguments_and_collect_content.
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()
         .write(true)
         .append(true)
@@ -71,7 +72,7 @@ pub fn log_built_config(struct_configuration: &Config) { // Gets called on by li
         Ok(_) => {},
         Err(error_two) => panic!("Problem writing to the lozgrep.log file: {}", error_two),
     }
-}
+} */
 
 pub fn log_verify_path (borrow_config: &Config) { // Gets called on by lib.rs function: get_contents.
     let lozgrep_log_result: std::result::Result<File, Error> = OpenOptions::new()

@@ -22,8 +22,7 @@ pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
 
     {
         let concatenated_args: &String = &arguments.join(", "); // Format the string before it gets passed to write_to_log_file.
-
-        write_to_log_file(1,&concatenated_args); // Pass the collected arguments to the logging function.
+        write_to_log_file(1,&concatenated_args); // Pass the collected arguments to the logging function. 
     }
 
     let configuration: Config = Config::build_arguments(&arguments).unwrap_or_else(|err: &str| { // Attempts to create a Config object by calling the associated function Config::build_arguments(&arguments).
@@ -31,7 +30,12 @@ pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
         process::exit(1); // If Ok(config), it unwraps and assigns it to config. If Err(err), it executes the closure, which prints the error message and exits the program with process::exit(1).
     }); // The variable config is an instance of the Config struct.
 
-    log_built_config(&configuration); // Logs the validated arguments.
+    {
+        let fmt_config_and_path: String = format!("Going to search for {} in file {}", &configuration.query, &configuration.file_path); // format! returns a String not a $String. Will fall out of scope once operation is complete.
+        write_to_log_file(2,&fmt_config_and_path);
+    }
+
+    // log_built_config(&configuration); // Logs the validated arguments.
 
     let file_contents: String = get_contents(&configuration).unwrap_or_else(|err: &str| {
         println!("{err}");
