@@ -17,7 +17,7 @@ pub struct QueryAndFileContent {
 }
 
 pub fn build_arguments_and_collect_content() -> QueryAndFileContent {
-    let arguments: Vec<String> = env::args().collect(); // We are calling on the args function. And using the collect method. A vector is a growable array type, and this vector will hold strings.
+    let arguments: Vec<String> = env::args().skip(1).collect(); // We are calling on the args function. And using the collect method. A vector is a growable array type, and this vector will hold strings.
 
     {
         let concatenated_args: &String = &arguments.join(", "); // Format the string before it gets passed to write_to_log_file.
