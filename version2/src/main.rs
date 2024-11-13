@@ -1,3 +1,4 @@
 fn main() {
-    println!("Hello, world!");
+    let possible_arguments: [String; 4] = ["--help", "-h", "--path", "-p"];
+
 }
