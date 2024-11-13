@@ -1,14 +1,34 @@
 use std::env;
 use std::process;
 
-fn main() {
-    let possible_options: [&'static str; 12] = ["--help", "-h", "--path", "-p", "--simple-grep", "-sg", "--simple-find", "-sf", "--verbose", "-v", "--version", "-ver"]; // Array of all the possible options.
-    let collected_options: Vec<String> = env::args().skip(1).collect(); // Will collect passed arguments and put them into a vector. All arguments are options. Does not collect the first passed argument, because it is not needed.
+struct Options {
+    help: usize,
+    version: usize,
+    verbose: usize,
+    query: usize,
+    path: usize,
+    simple_grep: usize,
+    simple_find: usize,
+}
 
+impl Options {
+    fn interpret_and_build_syntax(collected_options: Vec<String>) {
+
+    }
+}
+
+fn main() {
+    let collected_options_main: Vec<String> = env::args().skip(1).collect(); // Will collect passed arguments and put them into a vector. All arguments are options. Does not collect the first passed argument, because it is not needed.
+
+    let running_configuration= Options::interpret_and_build_syntax(collected_options_main);
+
+
+
+    // let possible_options: [&'static str; 12] = ["--help", "-h", "--path", "-p", "--simple-grep", "-sg", "--simple-find", "-sf", "--verbose", "-v", "--version", "-ver", "--query", "-q"]; // Array of all the possible options.
     // let total_num_collected_args: usize = collected_options.len(); // Gets the length of the collected options.
 
-    println!("{}", collected_options.len());
-    println!("{}", collected_options[0]);
+    // println!("{}", collected_options.len());
+    // println!("{}", collected_options[0]);
 
     if collected_options.len() < 1 { // If one or less options are passed, there is an issue.
         println!("Not enough options were passed");
@@ -20,7 +40,7 @@ fn main() {
         process::exit(1);
     }
 
-    if collected_options.len() == 1 { // The help option is the only singular option, therefore it is an error if there is only one collected option and it is not help.
+    /* if collected_options.len() == 1 { // The help option is the only singular option, therefore it is an error if there is only one collected option and it is not help.
         if collected_options[0] != "--help" && collected_options[0] != "-h" {
             println!("Invalid syntax"); // TODO: Make this error message more descriptive.
             process::exit(1);
@@ -28,7 +48,7 @@ fn main() {
         } else { // Help was passed, so the help message is printed. 
             print_help_message();
         }
-    }
+    }*/
 
     
 
