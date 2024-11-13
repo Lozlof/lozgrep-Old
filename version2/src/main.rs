@@ -9,14 +9,32 @@ struct Options {
     path: usize,
     simple_grep: usize,
     simple_find: usize,
+    query_item: String,
+    path_item: String,
 }
 
 impl Options {
     fn interpret_and_build_syntax(collected_arguments: Vec<String>) {
         let all_possible_options: [&str; 14] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--query", "-q", "--path", "-p", "--simple-grep", "-sg", "--simple-find", "-sf"];
         
-        let passed_options: Vec<String> =  verify_options_are_valid(&all_possible_options, &collected_arguments); // Seperates the options (arguments that start with -- or -) from the rest of the arguments. Then compares the options against all_possible_options to see if the given options are valid. If there are bad options, the process ends with an error message. If all the options are valid, it returns the valid options to interpret_and_build_syntax. 
+        let validated_passed_options: Vec<String> =  verify_options_are_valid(&all_possible_options, &collected_arguments); // Seperates the options (arguments that start with -- or -) from the rest of the arguments. Then compares the options against all_possible_options to see if the given options are valid. If there are bad options, the process ends with an error message. If all the options are valid, it returns the valid options to interpret_and_build_syntax. 
+        
+        verify_remaining_arguments_are_valid(&collected_arguments, &validated_passed_options);
+
+        /*let running_options: Options = Options {
+
+        }*/
+        
+        /*for item in passed_options { // For every item in passed_options.
+            if item == "--help" || item == "-h" {
+            
+            }
+        }*/
     }
+}
+
+fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>, borrow_validated_passed_options: &Vec<String>) {
+
 }
 
 fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) -> Vec<String> {
