@@ -28,15 +28,14 @@ fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_col
 
     let bad_options: &Vec<String> = &filtered_options// Parses through all the filtered options and checks if they are actual valid options.
         .iter()
-        .filter(|option| !borrow_all_possible_options.contains(&option.as_str())) // Filters by options that are not contained inside of borrow_all_possible_options.
+        .filter(|option| !&borrow_all_possible_options.contains(&option.as_str())) // Filters by options that are not contained inside of borrow_all_possible_options.
         .cloned()
         .collect();
 
-        if !bad_options.is_empty() { // If bad_options is not empty, then there is a problem.
-            
-        }
-    
-    println!("{:?}", bad_options);
+    if !bad_options.is_empty() { // If bad_options is not empty, then it means that bad option were passed.
+        let print_bad_options: &String = &bad_options.join(", "); // Turns the values of &bad_options into a string so a clear error message can be printed.
+        println!("Invalid syntax. Unknown options were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", &print_bad_options);
+    }
 }
 
 fn main() {
