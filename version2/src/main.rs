@@ -15,17 +15,28 @@ impl Options {
     fn interpret_and_build_syntax(collected_arguments: Vec<String>) {
         let all_possible_options: [&str; 14] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--query", "-q", "--path", "-p", "--simple-grep", "-sg", "--simple-find", "-sf"];
         
-        verify_options_are_valid(&collected_arguments);
+        verify_options_are_valid(&all_possible_options, &collected_arguments);
     }
 }
 
-fn verify_options_are_valid(borrow_collected_arguments: &Vec<String>) {
-    let filtered_options: &Vec<String> = &borrow_collected_arguments
+fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) {
+    let filtered_options: &Vec<String> = &borrow_collected_arguments // Parses through all the collected arguments and pulls out any options (-- -).
+        .iter() // creates an iterator.
+        .filter(|option| option.starts_with("--") || option.starts_with("-")) // .filter(...) is used to retain only items that satisfy a given condition. |option| is a closure (anonymous function) parameter representing each item passed from the iterator. Checks if the String starts with -- or -.
+        .cloned() // Is used to convert &String (a reference) into an owned String. This is necessary because we want to create a new vector with owned String values, rather than references to the original vector’s items
+        .collect(); //  Takes the filtered and cloned items from the iterator and collects them into a new Vec<String>. This newly created vector is then assigned to filtered_options.
+
+    let bad_options: &Vec<String> = &filtered_options// Parses through all the filtered options and checks if they are actual valid options.
         .iter()
-        .filter(|option| option.starts_with("--") || option.starts_with("-"))
+        .filter(|option| !borrow_all_possible_options.contains(&option.as_str())) // Filters by options that are not contained inside of borrow_all_possible_options.
         .cloned()
         .collect();
-    println!("{:?}", filtered_options);
+
+        if !bad_options.is_empty() { // If bad_options is not empty, then there is a problem.
+            
+        }
+    
+    println!("{:?}", bad_options);
 }
 
 fn main() {
