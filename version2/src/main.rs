@@ -17,66 +17,11 @@ impl Options {
     fn interpret_and_build_syntax(collected_arguments: Vec<String>) {
         let all_possible_options: [&str; 14] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--query", "-q", "--path", "-p", "--simple-grep", "-sg", "--simple-find", "-sf"];
         
-        let validated_passed_options: Vec<String> =  verify_options_are_valid(&all_possible_options, &collected_arguments); // Seperates the options (arguments that start with -- or -) from the rest of the arguments. Then compares the options against all_possible_options to see if the given options are valid. If there are bad options, the process ends with an error message. If all the options are valid, it returns the valid options to interpret_and_build_syntax. 
-        
-        // verify_remaining_arguments_are_valid(&collected_arguments, &validated_passed_options);
-
-        /*let running_options: Options = Options {
-
-        }*/
-        
-        /*for item in passed_options { // For every item in passed_options.
-            if item == "--help" || item == "-h" {
-            
-            }
-        }*/
+        verify_options_are_valid(&all_possible_options, &collected_arguments); // Seperates the options (arguments that start with -- or -) from the rest of the arguments. Then compares the options against all_possible_options to see if the given options are valid. If there are bad options, the process ends with an error message. If all the options are valid, it returns the valid options to interpret_and_build_syntax. 
     }
 }
 
-/*fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>, borrow_validated_passed_options: &Vec<String>) {
-    
-    if !borrow_validated_passed_options.contains(&borrow_collected_arguments[0]) { // The first argument passed has to be some sort of option. So if collected_arguments[0] is not contained in validated_passed_options, then there is an error.
-        println!("Invalid syntax. A valid option must be passed as the first argument. \"{}\" is not a valid option. Use \"--help\" or \"-h\" to see options and syntax.", &borrow_collected_arguments[0]);
-        process::exit(1);
-    } 
-    
-    let filter_arguments: &Vec<String> = borrow_collected_arguments
-        .iter()
-        .filter()
-    
-    
-    
-    
-    let mut collected_arguments_clone: Vec<String> = borrow_collected_arguments.clone();
-    let mut parsed_arguments: Vec<String> = Vec::new();
-    let mut track_arguments: Vec<usize> = Vec::new();
-
-
-    let singular_options: [&str; 10] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--simple-grep", "-sg", "--simple-find", "-sf"];
-    let followed_options: [&str; 4] = ["--query", "-q", "--path", "-p"];
-    let mut query_and_path: Vec<String> = Vec::new();
-
-    let mut counter: usize = 0;
-
-    while counter < borrow_collected_arguments.len() {
-        if followed_options.contains(&borrow_collected_arguments[counter].as_str()) {
-            if borrow_collected_arguments[counter] == "--query" || borrow_collected_arguments[counter] == "-q" {
-                let query_item:String = format!("Query Item: {}", borrow_collected_arguments[counter + 1].clone());
-                query_and_path.push(query_item);
-
-            } else {
-                let path_item: String = format!("Path Item: {}", borrow_collected_arguments[counter + 1].clone());
-                query_and_path.push(path_item);
-            }
-        }
-
-        counter += 1;
-    }
-
-    println!("{}, {}",query_and_path[0], query_and_path[1]);
-}*/
-
-fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) -> Vec<String> {
+fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) {
     let filtered_options: Vec<String> = borrow_collected_arguments // Parses through all the collected arguments and pulls out any options (-- -).
         .iter() // creates an iterator.
         .filter(|option| option.starts_with("--") || option.starts_with("-")) // .filter(...) is used to retain only items that satisfy a given condition. |option| is a closure (anonymous function) parameter representing each item passed from the iterator. Checks if the String starts with -- or -.
@@ -108,11 +53,26 @@ fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_col
     .cloned()
     .collect();
 
-    if filtered_arguments.len() > 2 { // If there are more than two non-option arguments, it is an issue because the only options that take arguments are query and path.
+    if filtered_arguments.len() != 2 {
+        if filtered_arguments.len() > 2 { // If there are more than two non-option arguments, it is an issue because the only options that take arguments are query and path.
+            let print_bad_arguments: String = filtered_arguments.join(", ");
+            println!("Invalid syntax. Too many values were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", print_bad_arguments);
 
+        } else if filtered_arguments.len() == 0 {
+            let query_present: bool = filtered_options.contains(&"--query".to_string()) || filtered_options.contains(&"-q".to_string()); // query and path_present will == true if they contain query or path options. 
+            let path_present: bool = filtered_options.contains(&"--path".to_string()) || filtered_options.contains(&"-p".to_string());
+
+            if query_present && path_present{ // Since query and path require arguments, it is an error if there are no arguments, but query or path is present.
+                println!("Invalid syntax. The query (--query, -q) and path (--path, -p) options require a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
+
+            } else if query_present {
+                println!("Invalid syntax. The query (--query, -q) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
+
+            } else if path_present {
+                println!("Invalid syntax. The path (--path, -p) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
+            }
+        }
     }
-
-    return filtered_options;
 }
 
 fn main() {
