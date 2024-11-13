@@ -14,7 +14,18 @@ struct Options {
 impl Options {
     fn interpret_and_build_syntax(collected_arguments: Vec<String>) {
         let all_possible_options: [&str; 14] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--query", "-q", "--path", "-p", "--simple-grep", "-sg", "--simple-find", "-sf"];
+        
+        verify_options_are_valid(&collected_arguments);
     }
+}
+
+fn verify_options_are_valid(borrow_collected_arguments: &Vec<String>) {
+    let filtered_options: &Vec<String> = &borrow_collected_arguments
+        .iter()
+        .filter(|option| option.starts_with("--") || option.starts_with("-"))
+        .cloned()
+        .collect();
+    println!("{:?}", filtered_options);
 }
 
 fn main() {
