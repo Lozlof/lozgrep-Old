@@ -1,7 +1,0 @@
-2024-11-12 19:12:25: Created this log file
-2024-11-12 19:12:25: Collected arguments: target/debug/lozgrep, How, /home/code/testfile.txt
-2024-11-12 19:12:25: Going to search for How in file /home/code/testfile.txt
-2024-11-12 19:12:25: Verified that: /home/code/testfile.txt is a valid path
-2024-11-12 19:12:25: Was able to retrieve the contents of: /home/code/testfile.txt
-2024-11-12 19:12:25: Main function recieved query parameters. Query for: How in file /home/code/testfile.txt. File content not written to log to reduce clutter
-2024-11-12 19:12:25: lozgrep found lines in the given file that matched the query parameters. Found items not written to log to reduce clutter

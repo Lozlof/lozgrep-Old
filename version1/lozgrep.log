@@ -1,0 +1,4 @@
+2024-11-13 12:46:17: Created this log file
+2024-11-13 12:46:17: Collected arguments: target/debug/lozgrep, aaa, /home/
+2024-11-13 12:46:17: Going to search for aaa in file /home/
+2024-11-13 12:46:17: Verified that: /home/ is a valid path
