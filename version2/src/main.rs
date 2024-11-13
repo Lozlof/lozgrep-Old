@@ -40,15 +40,23 @@ fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>
         process::exit(1);
     } 
     
-    
-    /*let mut counter: usize = 0;
+    let singular_options: [&str; 10] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--simple-grep", "-sg", "--simple-find", "-sf"];
+    let followed_options: [&str; 4] = ["--query", "-q", "--path", "-p"];
+    let mut query_and_path= Vec::new();
+
+    let mut counter: usize = 0;
 
     while counter < borrow_collected_arguments.len() {
+        if followed_options.contains(&borrow_collected_arguments[counter].as_str()) {
+            if borrow_collected_arguments[counter] == "--query" || borrow_collected_arguments[counter] == "-q" {
+                let query_item:String = format!("Query Item: {}", borrow_collected_arguments[counter + 1].clone()); // Leave here --------------
+                query_and_path.push(query_item);
+            }
+        }
 
-        borrow_collected_arguments[counter];
 
         counter += 1;
-    }*/
+    }
 }
 
 fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) -> Vec<String> {
