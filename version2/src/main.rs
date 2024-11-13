@@ -34,7 +34,21 @@ impl Options {
 }
 
 fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>, borrow_validated_passed_options: &Vec<String>) {
+    
+    if !borrow_validated_passed_options.contains(&borrow_collected_arguments[0]) { // The first argument passed has to be some sort of option. So if collected_arguments[0] is not contained in validated_passed_options, then there is an error.
+        println!("Invalid syntax. A valid option must be passed as the first argument. \"{}\" is not a valid option. Use \"--help\" or \"-h\" to see options and syntax.", &borrow_collected_arguments[0]);
+        process::exit(1);
+    } 
+    
+    
+    /*let mut counter: usize = 0;
 
+    while counter < borrow_collected_arguments.len() {
+
+        borrow_collected_arguments[counter];
+
+        counter += 1;
+    }*/
 }
 
 fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) -> Vec<String> {
@@ -52,8 +66,15 @@ fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_col
 
     if !bad_options.is_empty() { // If bad_options is not empty, then it means that bad option were passed.
         let print_bad_options: String = bad_options.join(", "); // Turns the values of &bad_options into a string so a clear error message can be printed.
-        println!("Invalid syntax. Unknown options were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", &print_bad_options);
-        process::exit(1);
+        
+        if bad_options.len() == 1 { // Different error messages depending on how many errors there are.
+            println!("Invalid syntax. An unknown option was passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", &print_bad_options);
+            process::exit(1);
+
+        } else {
+            println!("Invalid syntax. Unknown options were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", &print_bad_options);
+            process::exit(1);
+        }
     }
 
     return filtered_options;
