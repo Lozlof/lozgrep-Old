@@ -49,14 +49,19 @@ fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>
     while counter < borrow_collected_arguments.len() {
         if followed_options.contains(&borrow_collected_arguments[counter].as_str()) {
             if borrow_collected_arguments[counter] == "--query" || borrow_collected_arguments[counter] == "-q" {
-                let query_item:String = format!("Query Item: {}", borrow_collected_arguments[counter + 1].clone()); // Leave here --------------
+                let query_item:String = format!("Query Item: {}", borrow_collected_arguments[counter + 1].clone());
                 query_and_path.push(query_item);
+
+            } else {
+                let path_item: String = format!("Path Item: {}", borrow_collected_arguments[counter + 1].clone());
+                query_and_path.push(path_item);
             }
         }
 
-
         counter += 1;
     }
+
+    println!("{}, {}",query_and_path[0], query_and_path[1]);
 }
 
 fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) -> Vec<String> {
