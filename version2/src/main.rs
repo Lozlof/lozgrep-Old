@@ -19,7 +19,7 @@ impl Options {
         
         let validated_passed_options: Vec<String> =  verify_options_are_valid(&all_possible_options, &collected_arguments); // Seperates the options (arguments that start with -- or -) from the rest of the arguments. Then compares the options against all_possible_options to see if the given options are valid. If there are bad options, the process ends with an error message. If all the options are valid, it returns the valid options to interpret_and_build_syntax. 
         
-        verify_remaining_arguments_are_valid(&collected_arguments, &validated_passed_options);
+        // verify_remaining_arguments_are_valid(&collected_arguments, &validated_passed_options);
 
         /*let running_options: Options = Options {
 
@@ -33,16 +33,28 @@ impl Options {
     }
 }
 
-fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>, borrow_validated_passed_options: &Vec<String>) {
+/*fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>, borrow_validated_passed_options: &Vec<String>) {
     
     if !borrow_validated_passed_options.contains(&borrow_collected_arguments[0]) { // The first argument passed has to be some sort of option. So if collected_arguments[0] is not contained in validated_passed_options, then there is an error.
         println!("Invalid syntax. A valid option must be passed as the first argument. \"{}\" is not a valid option. Use \"--help\" or \"-h\" to see options and syntax.", &borrow_collected_arguments[0]);
         process::exit(1);
     } 
     
+    let filter_arguments: &Vec<String> = borrow_collected_arguments
+        .iter()
+        .filter()
+    
+    
+    
+    
+    let mut collected_arguments_clone: Vec<String> = borrow_collected_arguments.clone();
+    let mut parsed_arguments: Vec<String> = Vec::new();
+    let mut track_arguments: Vec<usize> = Vec::new();
+
+
     let singular_options: [&str; 10] = ["--help", "-h", "--version", "-ver", "--verbose", "-v", "--simple-grep", "-sg", "--simple-find", "-sf"];
     let followed_options: [&str; 4] = ["--query", "-q", "--path", "-p"];
-    let mut query_and_path= Vec::new();
+    let mut query_and_path: Vec<String> = Vec::new();
 
     let mut counter: usize = 0;
 
@@ -62,7 +74,7 @@ fn verify_remaining_arguments_are_valid(borrow_collected_arguments: &Vec<String>
     }
 
     println!("{}, {}",query_and_path[0], query_and_path[1]);
-}
+}*/
 
 fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_collected_arguments: &Vec<String>) -> Vec<String> {
     let filtered_options: Vec<String> = borrow_collected_arguments // Parses through all the collected arguments and pulls out any options (-- -).
@@ -88,6 +100,16 @@ fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_col
             println!("Invalid syntax. Unknown options were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", &print_bad_options);
             process::exit(1);
         }
+    }
+
+    let filtered_arguments: Vec<String> = borrow_collected_arguments
+    .iter()
+    .filter(|argument| !argument.starts_with("--") && !argument.starts_with("-"))// Will filter out all other passed arguments that are not options (--, 1).
+    .cloned()
+    .collect();
+
+    if filtered_arguments.len() > 2 { // If there are more than two non-option arguments, it is an issue because the only options that take arguments are query and path.
+
     }
 
     return filtered_options;
