@@ -56,25 +56,26 @@ fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_col
     let query_present: bool = filtered_options.contains(&"--query".to_string()) || filtered_options.contains(&"-q".to_string()); // query and path_present will == true if they contain query or path options. 
     let path_present: bool = filtered_options.contains(&"--path".to_string()) || filtered_options.contains(&"-p".to_string());
 
-    if filtered_arguments.len() == 0 && query_present == true || filtered_arguments.len() == 0 && path_present == true {
-        if query_present && path_present{ // Since query and path require arguments, it is an error if there are no arguments, but query or path is present.
+    if filtered_arguments.len() == 0 && query_present == true || filtered_arguments.len() == 0 && path_present == true { // Since query and path require arguments, it is an error if there are no arguments, but query or path is present.
+        if query_present == true && path_present == true { // Different error messages depending on the situation.
             println!("Invalid syntax. The query (--query, -q) and path (--path, -p) options require a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
 
-        } else if query_present {
+        } else if query_present == true {
             println!("Invalid syntax. The query (--query, -q) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
 
-        } else if path_present {
+        } else if path_present == true {
             println!("Invalid syntax. The path (--path, -p) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
         }
     }
-    // -------------------------------------------------------------------------------- leave off around here
-    if filtered_arguments.len() != 2 {
-        if filtered_arguments.len() > 2 { // If there are more than two non-option arguments, it is an issue because the only options that take arguments are query and path.
+
+    if filtered_arguments.len() == 1 || filtered_arguments.len() > 2 { // There should only be two non-option arguments, one for query, one for path.
+        if filtered_arguments.len() == 1 { // Different error messages depending on the situation.
+            let print_bad_arguments: String = filtered_arguments.join(" ");
+            println!("Invalid syntax. Too few values were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", print_bad_arguments);
+
+        } else { // filtered_argument.len() > 2.
             let print_bad_arguments: String = filtered_arguments.join(", ");
             println!("Invalid syntax. Too many values were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", print_bad_arguments);
-
-        } else { // filtered_arguments.len == 1.
-
         }
     }
 }
