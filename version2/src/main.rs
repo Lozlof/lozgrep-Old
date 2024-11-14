@@ -53,24 +53,28 @@ fn verify_options_are_valid(borrow_all_possible_options: &[&str; 14], borrow_col
     .cloned()
     .collect();
 
+    let query_present: bool = filtered_options.contains(&"--query".to_string()) || filtered_options.contains(&"-q".to_string()); // query and path_present will == true if they contain query or path options. 
+    let path_present: bool = filtered_options.contains(&"--path".to_string()) || filtered_options.contains(&"-p".to_string());
+
+    if filtered_arguments.len() == 0 && query_present == true || filtered_arguments.len() == 0 && path_present == true {
+        if query_present && path_present{ // Since query and path require arguments, it is an error if there are no arguments, but query or path is present.
+            println!("Invalid syntax. The query (--query, -q) and path (--path, -p) options require a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
+
+        } else if query_present {
+            println!("Invalid syntax. The query (--query, -q) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
+
+        } else if path_present {
+            println!("Invalid syntax. The path (--path, -p) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
+        }
+    }
+    // -------------------------------------------------------------------------------- leave off around here
     if filtered_arguments.len() != 2 {
         if filtered_arguments.len() > 2 { // If there are more than two non-option arguments, it is an issue because the only options that take arguments are query and path.
             let print_bad_arguments: String = filtered_arguments.join(", ");
             println!("Invalid syntax. Too many values were passed: {}. Use \"--help\" or \"-h\" to see options and syntax.", print_bad_arguments);
 
-        } else if filtered_arguments.len() == 0 {
-            let query_present: bool = filtered_options.contains(&"--query".to_string()) || filtered_options.contains(&"-q".to_string()); // query and path_present will == true if they contain query or path options. 
-            let path_present: bool = filtered_options.contains(&"--path".to_string()) || filtered_options.contains(&"-p".to_string());
+        } else { // filtered_arguments.len == 1.
 
-            if query_present && path_present{ // Since query and path require arguments, it is an error if there are no arguments, but query or path is present.
-                println!("Invalid syntax. The query (--query, -q) and path (--path, -p) options require a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
-
-            } else if query_present {
-                println!("Invalid syntax. The query (--query, -q) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
-
-            } else if path_present {
-                println!("Invalid syntax. The path (--path, -p) option requires a non-option value to follow it. Use \"--help\" or \"-h\" to see options and syntax.");
-            }
         }
     }
 }
