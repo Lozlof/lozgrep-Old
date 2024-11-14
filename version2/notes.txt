@@ -1,0 +1,6 @@
+1. Collect arguments - Main
+2. Check if no argumnts are passed
+3. Check if too many arguments are passed
+4. Seperates and checks for valid options
+5. Seperates non option arguments
+6. 
